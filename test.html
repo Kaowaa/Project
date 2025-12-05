@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบจัดการกิจกรรม</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body {
+  margin:0;
+  font-family:"Kanit", sans-serif;
+  background:#f0f2f5;
+}
+.navbar { padding:0.5rem 1rem; }
+.logo-school { width:40px; height:auto; margin-right:10px; }
+.navbar-brand { display:flex; align-items:center; font-weight:600; font-size:20px; color:white; }
+.main-layout { display:flex; margin-top:60px; padding:20px; gap:20px; }
+.sidebar {
+  width:200px;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.sidebar button {
+  border:none;
+  border-radius:20px;
+  padding:10px;
+  font-weight:500;
+  background:#ddd;
+  color:#333;
+  transition:0.3s;
+}
+.sidebar button:hover, .sidebar button.active { background:#aaa; color:white; }
+.sidebar .logout-btn { background:#ff4d4f; color:white; }
+.content {
+  flex:1;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+  min-height:300px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:18px;
+  color:#555;
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <img src="img/ตรา.png" class="logo-school">
+      ตารางกิจกรรมรายวัน
+    </div>
+  </div>
+</nav>
+
+<div class="main-layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button class="active" onclick="showContent('activity')">เพิ่มกิจกรรม / ประชาสัมพันธ์</button>
+    <button onclick="showContent('subject')">เพิ่มวิชาแลกแต้ม</button>
+    <button onclick="showContent('student')">เพิ่มนักเรียน / ลบนักเรียน</button>
+    <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content-area">
+    แสดงข้อมูลที่กดทางด้านซ้าย
+  </div>
+</div>
+
+<script>
+function showContent(type){
+  document.getElementById('content-area').innerText = {
+    activity: 'เพิ่มกิจกรรม / ประชาสัมพันธ์',
+    subject: 'เพิ่มวิชาแลกแต้ม',
+    student: 'เพิ่มนักเรียน / ลบนักเรียน'
+  }[type] || 'แสดงข้อมูล';
+  
+  // ปรับปุ่ม active
+  document.querySelectorAll('.sidebar button').forEach(btn=>btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function logout(){
+  alert("ออกจากระบบเรียบร้อย");
+}
+</script>
+
+</body>
+</html>

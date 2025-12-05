@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบกิจกรรมวิทยาลัย</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+/* ===================================
+   CSS สำหรับเว็บทางการวิทยาลัย (Login)
+   เน้นสีน้ำเงินกรมท่า (#003366)
+   =================================== */
+:root {
+    --college-primary: #003366;
+}
+
+body {
+  background: #F0F4F8; /* พื้นหลังสีอ่อนสะอาด */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Kanit", sans-serif;
+}
+.container {
+  background: #fff;
+  padding: 40px; 
+  border-radius: 15px;
+  width: 400px; /* ขยายความกว้าง */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+  text-align: center;
+}
+h3 {
+  font-weight: 800;
+  color: var(--college-primary); 
+  font-size: 1.8rem;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+.logo { width: 80px; height:auto; } 
+input {
+  margin-top: 10px;
+}
+button {
+  margin-top: 25px;
+  font-family: "Kanit", sans-serif;
+  font-weight: 600;
+}
+.btn-primary { 
+    background-color: var(--college-primary); 
+    border-color: var(--college-primary); 
+    width: 100%;
+}
+.btn-primary:hover { 
+    background-color: #002B5C; 
+    border-color: #002B5C;
+}
+.btn-outline-secondary {
+    border-color: #ccc;
+    color: #666;
+}
+.btn-outline-secondary:hover {
+    background-color: #e9ecef;
+    color: #333;
+    border-color: #ccc;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <img src="img/ตรา.png" class="logo" alt="โลโก้วิทยาลัย">
+  <h3>เข้าสู่ระบบกิจกรรมวิทยาลัย</h3>
+  <input id="username" type="text" class="form-control" placeholder="รหัสนักเรียน / Admin">
+  <input id="password" type="password" class="form-control" placeholder="วันเดือนปีเกิด (dd/mm/yy) / รหัส Admin">
+  <button class="btn btn-primary" onclick="login()">เข้าสู่ระบบ</button>
+  <a href="index.html" class="btn btn-outline-secondary mt-2 w-100">ดูตารางกิจกรรม (ไม่ต้องเข้าสู่ระบบ)</a>
+</div>
+
+<script>
+// ระบบล็อกอินแยก Role: Admin และ นักเรียน
+function login() {
+  const userInput = document.getElementById("username").value.trim();
+  const passInput = document.getElementById("password").value.trim();
+
+  // ✅ ตรวจสอบ Admin
+  if(userInput === "admin" && passInput === "8888") {
+    localStorage.setItem("adminLogin", "true");
+    alert("เข้าสู่ระบบผู้ดูแลสำเร็จ 🧑‍🏫");
+    window.location.href = "admin.html";
+    return;
+  }
+
+  // ✅ ตรวจสอบนักเรียนจาก localStorage
+  const students = JSON.parse(localStorage.getItem("students") || "[]");
+  const student = students.find(s => s.id === userInput);
+
+  if(student && student.dob === passInput) {
+    localStorage.setItem("student", student.id);
+    alert(`ยินดีต้อนรับ ${student.name}!`);
+    window.location.href = "index.html";
+  } else {
+    alert("รหัสไม่ถูกต้อง กรุณาตรวจสอบรหัสนักเรียนหรือวันเดือนปีเกิด ❌");
+  }
+}
+</script>
+</body>
+</html>

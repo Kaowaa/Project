@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<title>ระบบแลกแต้ม</title>
+<style>
+/* ===================================
+   CSS สำหรับเว็บทางการวิทยาลัย (Redeem)
+   เน้นสีน้ำเงินกรมท่า (#003366) และสีทอง (#FFC107)
+   =================================== */
+:root {
+    --college-primary: #003366;
+    --college-accent: #FFC107;
+}
+body { 
+    font-family: Kanit, sans-serif; 
+    background: #F0F4F8; 
+    padding-top: 70px; 
+}
+.container { 
+    width: 800px; 
+    background: #ffffff; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+    text-align: center; 
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.main-container {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+h1, h2, h3 { 
+    color: var(--college-primary); 
+    font-weight: 700; 
+    margin-bottom: 20px;
+}
+.bg-college-primary { background-color: var(--college-primary) !important; }
+.Font { 
+    font-size: 28px; 
+    color: white !important; 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+}
+.logo-school { 
+    width: 40px; 
+    height:auto; 
+    margin-right: 10px; 
+    margin-left: 0; 
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+/* Subject Card */
+.card { 
+    border: 1px solid #D1D9E6; 
+    padding: 15px; 
+    margin-bottom: 15px; 
+    border-radius: 8px; 
+    text-align: left; 
+    background: #F9FBFC; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--college-primary);
+}
+.card h5 { color: var(--college-primary); font-weight: 700; margin-bottom: 5px; }
+.card p { margin-bottom: 5px; font-size: 0.95rem; }
+
+/* Redeem Button */
+.redeem-btn { 
+    background: var(--college-accent); 
+    color: var(--college-primary); 
+    border: none; 
+    font-weight: 700;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+.redeem-btn:hover { background: #E6B000; }
+.redeem-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Sidebar (Offcanvas) enhancements */
+.offcanvas-header { background-color: var(--college-primary); color: white; }
+.offcanvas-title { font-weight: 700; }
+.list-group-item { border-left: 5px solid transparent; }
+.list-group-item:hover { background-color: #f8f9fa; }
+.list-group-item .fw-bold { color: var(--college-accent); }
+.nav-link.active { font-weight: 600; color: var(--college-accent) !important; }
+
+@media (max-width: 450px) {
+    .Font {
+        font-size: 22px; /* ลดขนาดตัวอักษรของ Navbar */
+    }
+    .logo-school {
+        width: 30px; /* ลดขนาดโลโก้ใน Navbar */
+    }
+    .container h2 {
+        font-size: 1.5rem; /* ลดขนาดหัวข้อใน Main Container */
+    }
+}
+
+@media (max-width:600px) {
+  .container { width:100%; border-radius:0; box-shadow:none; padding: 20px; }
+  body { padding-top: 105px; } /* 👈 แก้ไข: เพิ่มระยะห่างด้านบนเป็น 105px บนมือถือ */
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-college-primary fixed-top">
+  <div class="container-fluid">
+    <div class="Font">
+      <img src="img/ตรา.png" class="logo-school" alt="College Logo">
+      ระบบติดตามและจัดการข้อมูลการเข้าร่วมกิจกรรมของนักศึกษา
+    </div>
+
+    <div class="d-flex align-items-center ms-auto">
+      <span id="userText" class="text-white me-2"></span>
+      <button id="loginBtn" class="btn btn-warning btn-sm text-dark fw-bold me-2">เข้าสู่ระบบ</button>
+      <button class="navbar-toggler" id="menuBtn" style="display:none;"
+        type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+
+    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">ข้อมูลนักศึกษา</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+
+      <div class="offcanvas-body">
+
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+          <li class="nav-item">
+            <a class="nav-link active">ข้อมูล</a>
+          </li>
+
+          <ol class="list-group list-group-numbered">
+
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">ขาดกิจกรรม</div>
+                ขาดกิจกรรมทั้งหมด : <span id="missCount">0</span>
+              </div>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">เข้าร่วมกิจกรรม</div>
+                เข้าร่วมกิจกรรมทั้งหมด : <span id="joinCount">0</span>
+              </div>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">คะแนนสะสม/แต้มสะสม</div>
+                คะแนนสะสม : <span id="pointCount">0</span>
+              </div>
+            </li>
+
+            <li class="nav-item mt-2">
+              <a class="nav-link active" href="tam.html">แลกแต้มเป็นคะแนนจิตพิสัย</a>
+            </li>
+            <li class="nav-item mt-2">
+              <a id="backBtn" class="nav-link" href="#">ย้อนกลับไปหน้าแรก</a>
+            </li>
+          </ol>
+        
+        </ul>
+
+        <div class="mt-4 pt-4 border-top">
+          <button id="logoutBtn" class="btn btn-outline-danger w-100" onclick="logout()" style="display:none;">ออกจากระบบ</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<div class="container main-container">
+  
+  <h2>ระบบแลกแต้ม</h2>
+  
+  <div class="text-start mb-4 p-3 bg-light rounded shadow-sm border border-primary">
+    <h3>แต้มสะสมปัจจุบัน: <span id="points" class="text-success fw-bold">0.0</span> คะแนน</h3>
+  </div>
+
+  <h3 class="text-start">วิชาที่เปิดให้แลก</h3>
+
+  <div id="subjectContainer" class="text-start">
+    </div>
+
+  <hr class="my-4">
+
+  <h3 class="text-start">ประวัติการแลกแต้ม</h3>
+  <ul id="history" class="list-group list-group-flush text-start">
+    </ul>
+
+</div>
+
+<script src="storage.js"></script>
+<script src="auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const studentId = localStorage.getItem("student");
+if(!studentId){
+  alert("กรุณาเข้าสู่ระบบก่อนใช้งานระบบแลกแต้ม");
+  window.location.href = "login.html";
+}
+
+// ⭐ Sidebar และ Navbar (มาจาก index.html)
+function updateStats(){
+  if (!studentId) return;
+
+  const regs = JSON.parse(localStorage.getItem("registrations") || "{}");
+  const missed = JSON.parse(localStorage.getItem("missedEvents") || "{}");
+  const redeemLogs = JSON.parse(localStorage.getItem("redeemLogs") || "[]");
+  const subjects = JSON.parse(localStorage.getItem("subjects") || "[]");
+
+  let joinCount = 0;
+  Object.keys(regs).forEach(date=>{
+    regs[date].forEach(r=>{
+      if(r.startsWith(studentId + "_")) joinCount++;
+    });
+  });
+
+  // 1. คำนวณแต้มที่ได้รับทั้งหมด
+  let totalEarnedPoints = joinCount * 0.5; 
+
+  // 2. คำนวณแต้มที่แลกไปแล้ว (หักออก)
+  let redeemedPoints = 0;
+  redeemLogs.filter(log => log.studentID === studentId).forEach(log => {
+    const subject = subjects.find(s => s.code === log.subjectCode);
+    if (subject) {
+      redeemedPoints += subject.points;
+    }
+  });
+
+  // 3. คำนวณแต้มคงเหลือ
+  let finalPoints = totalEarnedPoints - redeemedPoints;
+  if (finalPoints < 0) finalPoints = 0; 
+  
+  localStorage.setItem("points_" + studentId, finalPoints.toFixed(1));
+
+  document.getElementById("joinCount").innerText = joinCount;
+  document.getElementById("missCount").innerText = Object.keys(missed).filter(k => k.startsWith(studentId + "_")).length;
+  document.getElementById("pointCount").innerText = finalPoints.toFixed(1);
+
+  // อัปเดตแต้มในหน้าหลัก
+  document.getElementById("points").innerText = finalPoints.toFixed(1);
+}
+
+function checkLoginStatus(){
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const menuBtn = document.getElementById("menuBtn");
+
+    if (studentId) {
+        const students = JSON.parse(localStorage.getItem("students") || "[]");
+        const stu = students.find(s => s.id === studentId);
+        const fullname = stu ? stu.name : studentId;
+
+        document.getElementById("userText").innerText = "👋 " + fullname;
+
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        menuBtn.style.display = "inline-block";
+        updateStats();
+    } else {
+        document.getElementById("userText").innerText = "";
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        menuBtn.style.display = "none";
+    }
+}
+
+function logout(){
+  localStorage.removeItem("student");
+  window.location.href = "login.html";
+}
+document.getElementById("backBtn").onclick = () => {
+    if (history.length > 1) {
+        history.back();
+    } else {
+        window.location.href = "index.html";
+    }
+  };
+
+
+/* =======================
+   ระบบแลกแต้ม
+======================= */
+function renderSubjects(){
+  const subjectContainer = document.getElementById("subjectContainer");
+  subjectContainer.innerHTML = "";
+  const subjects = JSON.parse(localStorage.getItem("subjects") || "[]");
+  const studentCurrentPoints = parseFloat(localStorage.getItem(`points_${studentId}`) || "0");
+
+  if(subjects.length === 0){
+    subjectContainer.innerHTML = "<p class='text-muted'>ยังไม่มีวิชาให้แลกในขณะนี้</p>";
+    return;
+  }
+  
+  subjects.forEach(s => {
+    const card = document.createElement("div");
+    card.className = "card mb-3";
+    
+    const isRedeemed = isSubjectRedeemed(studentId, s.code);
+    const canRedeem = studentCurrentPoints >= s.points && !isRedeemed;
+    
+    card.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5>${s.name} (${s.code})</h5>
+          <p class="text-muted">ใช้แต้ม: <strong>${s.points}</strong> คะแนน</p>
+        </div>
+        <button class="redeem-btn" 
+                onclick="redeemSubject('${s.code}', '${s.name}', ${s.points})"
+                ${!canRedeem || isRedeemed ? 'disabled' : ''}>
+          ${isRedeemed ? 'แลกแล้ว' : (canRedeem ? 'แลกแต้ม!' : 'แต้มไม่พอ')}
+        </button>
+      </div>
+    `;
+    subjectContainer.appendChild(card);
+  });
+}
+
+function isSubjectRedeemed(studentID, subjectCode){
+    const logs = JSON.parse(localStorage.getItem("redeemLogs") || "[]");
+    return logs.some(log => log.studentID === studentID && log.subjectCode === subjectCode);
+}
+
+function redeemSubject(code, name, cost){
+    let points = parseFloat(localStorage.getItem(`points_${studentId}`) || "0");
+    
+    if(points < cost){
+        alert("แต้มสะสมไม่พอสำหรับการแลกวิชานี้");
+        return;
+    }
+    
+    if(isSubjectRedeemed(studentId, code)){
+        alert("คุณได้แลกวิชานี้ไปแล้ว");
+        return;
+    }
+
+    if(confirm(`คุณต้องการใช้ ${cost} แต้ม เพื่อแลกวิชา ${name} (${code}) ใช่หรือไม่?`)){
+        // 1. หักแต้ม
+        points -= cost;
+        localStorage.setItem(`points_${studentId}`, points.toFixed(1));
+        
+        // 2. บันทึกประวัติการแลก
+        const historyKey = "history_" + studentId;
+        let history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+        const today = new Date().toLocaleDateString('th-TH');
+        const entry = { date: today, reward: name, cost: cost, code: code };
+        history.push(entry);
+        localStorage.setItem(historyKey, JSON.stringify(history));
+
+        // 3. บันทึก Log สำหรับ admin
+        let logs = JSON.parse(localStorage.getItem("redeemLogs") || "[]");
+        logs.push({
+            studentID: studentId,
+            subjectCode: code,
+            subjectName: name,
+            cost: cost,
+            date: today
+        });
+        localStorage.setItem("redeemLogs", JSON.stringify(logs));
+
+        // 4. อัปเดต UI
+        renderHistory();
+        updateStats(); // อัปเดตแต้มใน sidebar และหน้าหลัก
+        renderSubjects(); // อัปเดตปุ่ม disabled
+        alert("แลกแต้มสำเร็จ ✔");
+    }
+}
+
+function renderHistory(){
+    const historyDisplay = document.getElementById("history");
+    historyDisplay.innerHTML = "";
+    const historyKey = "history_" + studentId;
+    const history = JSON.parse(localStorage.getItem(historyKey) || "[]").reverse(); // ล่าสุดขึ้นก่อน
+
+    if(history.length === 0){
+        historyDisplay.innerHTML = "<li class='list-group-item text-center text-muted'>ยังไม่มีประวัติการแลกแต้ม</li>";
+        return;
+    }
+
+    history.forEach(item => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `
+            <span>${item.date} - แลก: <strong>${item.reward}</strong> (${item.code})</span>
+            <span class="badge bg-danger">ใช้ ${item.cost} คะแนน</span>
+        `;
+        historyDisplay.appendChild(li);
+    });
+}
+
+window.onload = () => {
+  checkLoginStatus();
+  renderSubjects();
+  renderHistory();
+};
+
+</script>
+</body>
+</html>
