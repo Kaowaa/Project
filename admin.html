@@ -140,12 +140,15 @@ h3, h5 {
 .modal-content { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .modal-header { 
     background-color: var(--college-primary); 
-    color: white; 
+    color: white; /* แก้ไข: ทำให้ข้อความใน Header เป็นสีขาว */
     border-bottom: none; 
     border-top-left-radius: 12px; 
     border-top-right-radius: 12px; 
 }
 .modal-title { font-weight: 700; }
+.modal-header .btn-close { /* แก้ไข: ทำให้ปุ่มปิด Modal (X) เป็นสีขาว */
+    filter: invert(1) grayscale(100%) brightness(200%); 
+}
 
 /* Stats Box in Student Detail Modal */
 .stat-box { 
