@@ -140,15 +140,12 @@ h3, h5 {
 .modal-content { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .modal-header { 
     background-color: var(--college-primary); 
-    color: white; /* แก้ไข: ทำให้ข้อความใน Header เป็นสีขาว */
+    color: white; 
     border-bottom: none; 
     border-top-left-radius: 12px; 
     border-top-right-radius: 12px; 
 }
 .modal-title { font-weight: 700; }
-.modal-header .btn-close { /* แก้ไข: ทำให้ปุ่มปิด Modal (X) เป็นสีขาว */
-    filter: invert(1) grayscale(100%) brightness(200%); 
-}
 
 /* Stats Box in Student Detail Modal */
 .stat-box { 
@@ -182,7 +179,7 @@ h3, h5 {
 <nav class="navbar navbar-dark bg-college-primary fixed-top">
   <div class="container-fluid">
     <div class="Font">
-      <img src="ตรา.png" class="logo-school" alt="College Logo">
+      <img src="img/ตรา.png" class="logo-school" alt="College Logo">
       ระบบจัดการกิจกรรม (Admin)
     </div>
     <div class="d-flex align-items-center">
@@ -252,7 +249,7 @@ h3, h5 {
     <hr>
     <h5 class="fw-bold mb-3">นำเข้านักเรียนจาก CSV</h5>
     <div class="d-flex gap-2 mb-2"> <input type="file" id="studentCSV" accept=".csv" class="form-control">
-      <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#csvGuideModal">รูปแบบ CSV</button>
+      <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#csvGuideModal">? รูปแบบ CSV</button>
     </div>
     <button class="btn btn-primary w-100 mb-3" onclick="importStudentsCSV()">Import CSV</button>
 
@@ -356,7 +353,7 @@ h3, h5 {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="csvGuideModalLabel">รูปแบบไฟล์ CSV สำหรับนำเข้า</h5>
+        <h5 class="modal-title" id="csvGuideModalLabel">📚 รูปแบบไฟล์ CSV สำหรับนำเข้า</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -1050,5 +1047,4 @@ renderStudents();
 </script>
 
 </body>
-
 </html>
