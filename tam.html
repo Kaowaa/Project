@@ -219,16 +219,27 @@ if(!studentId){
 function updateStats(){
   if (!studentId) return;
 
+  // ดึงข้อมูลการลงทะเบียน
   const regs = JSON.parse(localStorage.getItem("registrations") || "{}");
   const missed = JSON.parse(localStorage.getItem("missedEvents") || "{}");
   const redeemLogs = JSON.parse(localStorage.getItem("redeemLogs") || "[]");
   const subjects = JSON.parse(localStorage.getItem("subjects") || "[]");
 
   let joinCount = 0;
-  Object.keys(regs).forEach(date=>{
-    regs[date].forEach(r=>{
-      if(r.startsWith(studentId + "_")) joinCount++;
-    });
+
+  // ✅ แก้ไข: ปรับการนับจำนวนกิจกรรมให้รองรับทั้ง Object และ String
+  Object.keys(regs).forEach(date => {
+    if (Array.isArray(regs[date])) {
+      regs[date].forEach(r => {
+        if (r && typeof r === 'object') {
+          // รูปแบบใหม่ (Object)
+          if (r.username === studentId) joinCount++;
+        } else if (typeof r === 'string') {
+          // รูปแบบเก่า (String)
+          if (r.startsWith(studentId + "_")) joinCount++;
+        }
+      });
+    }
   });
 
   // 1. คำนวณแต้มที่ได้รับทั้งหมด
@@ -247,14 +258,21 @@ function updateStats(){
   let finalPoints = totalEarnedPoints - redeemedPoints;
   if (finalPoints < 0) finalPoints = 0; 
   
+  // บันทึกแต้มล่าสุด
   localStorage.setItem("points_" + studentId, finalPoints.toFixed(1));
 
-  document.getElementById("joinCount").innerText = joinCount;
-  document.getElementById("missCount").innerText = Object.keys(missed).filter(k => k.startsWith(studentId + "_")).length;
-  document.getElementById("pointCount").innerText = finalPoints.toFixed(1);
+  // แสดงผลในหน้าจอ (ตรวจสอบ ID ให้ตรงกับ HTML ของคุณ)
+  if(document.getElementById("joinCount")) document.getElementById("joinCount").innerText = joinCount;
+  
+  // นับจำนวนการขาดกิจกรรม (Logic เหมือนเดิมแต่กัน Error)
+  let missCount = Object.keys(missed).filter(k => k.startsWith(studentId + "_")).length;
+  if(document.getElementById("missCount")) document.getElementById("missCount").innerText = missCount;
+  
+  if(document.getElementById("pointCount")) document.getElementById("pointCount").innerText = finalPoints.toFixed(1);
 
-  // อัปเดตแต้มในหน้าหลัก
-  document.getElementById("points").innerText = finalPoints.toFixed(1);
+  // ✅ อัปเดตแต้มในจุดอื่นๆ (ถ้ามี ID "points" หรือ "userPoints")
+  if(document.getElementById("points")) document.getElementById("points").innerText = finalPoints.toFixed(1);
+  if(document.getElementById("userPoints")) document.getElementById("userPoints").innerText = finalPoints.toFixed(1);
 }
 
 function checkLoginStatus(){
