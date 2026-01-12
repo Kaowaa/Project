@@ -97,3 +97,25 @@ function isRegistered(date, username, idx = 0){
   }
 })();
 // -------------------------------------------
+// --- ส่วนสำหรับเพิ่มวิชาทดสอบ (Test Subject) ---
+(function seedSubjectData() {
+  const KEY_SUBJECTS = "subjects";
+  let subjects = JSON.parse(localStorage.getItem(KEY_SUBJECTS) || "[]");
+  
+  // ตรวจสอบว่ามีวิชาทดสอบนี้อยู่หรือยัง (เช็คจากรหัสวิชา)
+  const testSubjectCode = "TEST001";
+  const hasTestSubject = subjects.some(s => s.code === testSubjectCode);
+
+  if (!hasTestSubject) {
+    const testSubject = {
+      code: testSubjectCode,
+      name: "วิชาทดสอบระบบ (ใช้ 0.5 แต้ม)",
+      points: 0.5 // กำหนดแต้มที่ใช้ตามที่คุณต้องการ
+    };
+    
+    subjects.push(testSubject);
+    localStorage.setItem(KEY_SUBJECTS, JSON.stringify(subjects));
+    console.log("✅ เพิ่มวิชาทดสอบเรียบร้อยแล้ว: TEST001 (0.5 แต้ม)");
+  }
+})();
+// -------------------------------------------
