@@ -74,3 +74,26 @@ function isRegistered(date, username, idx = 0){
     return entry.username === username && Number(entry.idx) === targetIdx;
   });
 }
+// --- ส่วนสำหรับเพิ่มนักเรียนทดสอบ (Test Account) ---
+(function seedTestData() {
+  const students = JSON.parse(localStorage.getItem("students") || "[]");
+  
+  // ตรวจสอบว่ามีนักเรียนคนนี้อยู่หรือยัง (เช็คจาก ID)
+  const testStudentId = "660001";
+  const hasTestStudent = students.some(s => s.id === testStudentId);
+
+  if (!hasTestStudent) {
+    const testStudent = {
+      name: "นายทดสอบ ระบบดี",
+      id: testStudentId,
+      grade: "ปวช.1",
+      dept: "เทคโนโลยีสารสนเทศ",
+      dob: "010148" // ใช้เป็นรหัสผ่านในการ Login
+    };
+    
+    students.push(testStudent);
+    localStorage.setItem("students", JSON.stringify(students));
+    console.log("✅ เพิ่มนักเรียนทดสอบเรียบร้อยแล้ว: ID 660001 / Pass: 010148");
+  }
+})();
+// -------------------------------------------
