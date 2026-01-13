@@ -1189,35 +1189,40 @@ renderSubjects();
    นักเรียน
 ======================= */
 function addStudent(){
-  const name = document.getElementById("studentName").value.trim();
-  const id   = document.getElementById("studentID").value.trim();
-  const grade = document.getElementById("studentGrade").value.trim(); // NEW: ระดับชั้น
-  const dept = document.getElementById("studentDept").value.trim();   // NEW: แผนก
-  const dob  = document.getElementById("studentDOB").value.trim();
+  // แก้ไข ID ให้ตรงกับ HTML ของคุณ (stdName, stdId, stdGrade, stdDept, stdDob)
+  const name = document.getElementById("stdName").value.trim();
+  const id   = document.getElementById("stdId").value.trim();
+  const grade = document.getElementById("stdGrade").value.trim(); 
+  const dept = document.getElementById("stdDept").value.trim();   
+  const dob  = document.getElementById("stdDob").value.trim();
 
-  // NEW: เพิ่มการตรวจสอบ field ใหม่
+  // ตรวจสอบข้อมูล
   if(!name || !id || !grade || !dept || !dob){
-    alert("กรุณากรอกข้อมูลให้ครบ");
+    alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
     return;
   }
 
   let students = JSON.parse(localStorage.getItem("students") || "[]");
-  if(students.some(s=>s.id===id)){
-    alert("รหัสนักเรียนซ้ำ");
+  
+  // ตรวจสอบรหัสซ้ำ
+  if(students.some(s => s.id === id)){
+    alert("รหัสนักเรียนนี้มีในระบบแล้ว");
     return;
   }
 
-  // NEW: เพิ่มการเก็บ grade และ dept
+  // บันทึกลง localStorage
   students.push({ name, id, grade, dept, dob });
   localStorage.setItem("students", JSON.stringify(students));
 
-  document.getElementById("studentName").value="";
-  document.getElementById("studentID").value="";
-  document.getElementById("studentGrade").value=""; // NEW: เคลียร์ค่า
-  document.getElementById("studentDept").value="";  // NEW: เคลียร์ค่า
-  document.getElementById("studentDOB").value="";
+  // ล้างค่าในช่อง Input หลังจากเพิ่มเสร็จ
+  document.getElementById("stdName").value = "";
+  document.getElementById("stdId").value = "";
+  document.getElementById("stdGrade").value = "";
+  document.getElementById("stdDept").value = "";
+  document.getElementById("stdDob").value = "";
 
-  renderStudents();
+  alert("เพิ่มรายชื่อสำเร็จ ✅");
+  renderStudents(); // อัปเดตรายชื่อในหน้าจอ
 }
 
 function renderStudents(){
