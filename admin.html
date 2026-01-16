@@ -201,7 +201,7 @@ h3, h5 {
     <div class="text-center"><h4><strong>เพิ่มข้อมูลต่างๆ</strong></h4></div>
     <button id="modeActivity" class="btn btn-primary">📅 เพิ่มกิจกรรม</button>
     <button id="modeStudent" class="btn btn-success">👨‍🎓 จัดการนักเรียน</button>
-    <button id="modeSubject" class="btn btn-secondary">📕 เพิ่มวิชาแลกแต้ม</button>
+    <button id="modeSubject" class="btn btn-secondary">📕 เพิ่มแต้มแลกวิชา</button>
 
   </div>
 
@@ -1267,15 +1267,21 @@ function deleteStudent(i){
 }
 
 /* 🆕 Function: ดาวน์โหลดรายงานนักเรียนรวมทั้งหมด */
-function downloadAllStudentReport() {
+/* 🆕 Function: ดาวน์โหลดรายงานนักเรียนรวมทั้งหมด */
+function downloadAllStudentsReport() { // เพิ่ม s ให้ตรงกับ HTML
     const students = JSON.parse(localStorage.getItem("students") || "[]");
     const redeemLogs = JSON.parse(localStorage.getItem("redeemLogs") || "[]");
     const events = getEvents();
     const registrations = getRegistrations();
     const subjects = getSubjects();
     
-    // Header for the CSV (NEW: Added ระดับชั้น and แผนก)
-    let csvContent = "ชื่อนักเรียน,รหัสนักเรียน,ระดับชั้น,แผนก,เข้าร่วมกิจกรรม (ครั้ง),ขาดกิจกรรม (ครั้ง),แต้มสะสม (ปัจจุบัน),จำนวนวิชาที่แลก,รายการวิชาที่แลก\n";
+    if (students.length === 0) {
+        alert("ไม่มีข้อมูลนักเรียนให้ดาวน์โหลด");
+        return;
+    }
+
+    // Header for the CSV (ใส่ \uFEFF เพื่อให้ Excel อ่านภาษาไทยออก)
+    let csvContent = "\uFEFFชื่อนักเรียน,รหัสนักเรียน,ระดับชั้น,แผนก,เข้าร่วมกิจกรรม (ครั้ง),ขาดกิจกรรม (ครั้ง),แต้มสะสม (ปัจจุบัน),จำนวนวิชาที่แลก,รายการวิชาที่แลก\n";
 
     students.forEach(student => {
         const studentId = student.id;
@@ -1287,34 +1293,32 @@ function downloadAllStudentReport() {
         Object.keys(events).forEach(date => {
             events[date].forEach((event, index) => {
                 if (event.mode === 'register') {
-                    const regKey = `${studentId}_${index}`;
-                    const registered = (registrations[date] || []).includes(regKey);
+                    const dayRegs = registrations[date] || [];
+                    const isRegistered = dayRegs.some(r => {
+                        if (r && typeof r === 'object') {
+                            return r.username === studentId && r.idx == index;
+                        }
+                        return r === `${studentId}_${index}`;
+                    });
                     
-                    if (registered) {
+                    if (isRegistered) {
                         attendedCount++;
                     } else {
-                        // นับเป็นขาดเมื่อเป็นกิจกรรมลงทะเบียนและไม่ได้ลงทะเบียน
                         missedCount++; 
                     }
                 }
             });
         });
 
-        // 2. แต้มสะสม (ดึงจาก Local Storage ที่ index.html คำนวณไว้ล่าสุด)
+        // 2. แต้มสะสม
         const studentPoints = parseFloat(localStorage.getItem(`points_${studentId}`) || "0").toFixed(1);
 
         // 3. รายการวิชาที่แลก
         const studentRedeems = redeemLogs.filter(log => log.studentID === studentId);
-        
-        // Summarize redeemed subjects
         const redeemSummary = studentRedeems.reduce((acc, log) => {
             const sub = subjects.find(s => s.code === log.subjectCode);
             const subjectName = sub ? sub.name : `(ไม่พบวิชา: ${log.subjectCode})`;
-            if (acc[subjectName]) {
-                acc[subjectName]++;
-            } else {
-                acc[subjectName] = 1;
-            }
+            if (acc[subjectName]) { acc[subjectName]++; } else { acc[subjectName] = 1; }
             return acc;
         }, {});
         
@@ -1322,12 +1326,11 @@ function downloadAllStudentReport() {
             `${name} (${redeemSummary[name]} ครั้ง)`
         ).join(' | ');
 
-        // Add to CSV content (NEW: Added student.grade and student.dept)
-        csvContent += `"${student.name}",${student.id},"${student.grade || '-'}"` +
-                      `,"${student.dept || '-'}",${attendedCount},${missedCount},${studentPoints},${studentRedeems.length},"${redeemedList}"\n`;
+        // รวมบรรทัดข้อมูล
+        csvContent += `"${student.name}","${student.id}","${student.grade || '-'}","${student.dept || '-'}",${attendedCount},${missedCount},${studentPoints},${studentRedeems.length},"${redeemedList}"\n`;
     });
 
-    downloadCSV(csvContent, `รายงานนักเรียนรวม_${new Date().toISOString().slice(0, 10)}.csv`);
+    downloadCSV(csvContent, `รายงานนักเรียนรวม_${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.csv`);
 }
 
 /* ⭐ Function: แสดงรายละเอียดนักเรียน */
