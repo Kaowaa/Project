@@ -1470,6 +1470,24 @@ renderStudents();
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
 <script>
+// เพิ่มโค้ดนี้เพื่อให้ช่องเวลาใช้งานได้
+$(function () {
+    flatpickr("#eventStart", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        locale: "th"
+    });
+
+    flatpickr("#eventEnd", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        locale: "th"
+    });
+});
 $(function () {
     // 1. ตั้งค่ามาตรฐานเป็นภาษาไทย
     $.datepicker.regional['th'] = {
@@ -1554,3 +1572,4 @@ $(function () {
 
 </body>
 </html>
+
