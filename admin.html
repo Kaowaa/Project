@@ -279,9 +279,32 @@ h3, h5 {
     <h5 class="fw-bold mb-3">เพิ่มนักเรียนใหม่</h5>
     <input id="stdName" class="form-control mb-2" placeholder="ชื่อ-นามสกุล">
     <input id="stdId" class="form-control mb-2" placeholder="รหัสนักเรียน">
-    <input id="stdGrade" class="form-control mb-2" placeholder="ระดับชั้น (เช่น ปวช.1)">
-    <input id="stdDept" class="form-control mb-2" placeholder="แผนก">
-    <input id="stdDob" class="form-control mb-2" placeholder="วันเดือนปีเกิด (วว/ดด/ปปปป)">
+    
+    <select id="stdGrade" class="form-select mb-2">
+        <option value="" selected disabled>-- เลือกระดับชั้น --</option>
+        <option value="ปวช.1">ปวช.1</option>
+        <option value="ปวช.2">ปวช.2</option>
+        <option value="ปวช.3">ปวช.3</option>
+        <option value="ปวส.1">ปวส.1</option>
+        <option value="ปวส.2">ปวส.2</option>
+    </select>
+
+    <select id="stdDept" class="form-select mb-2">
+        <option value="" selected disabled>-- เลือกแผนกวิชา --</option>
+        <option value="แผนกวิชาธุรกิจค้าปลีก">แผนกวิชาธุรกิจค้าปลีก</option>
+        <option value="แผนกวิชาคอมพิวเตอร์ธุรกิจ">แผนกวิชาคอมพิวเตอร์ธุรกิจ</option>
+        <option value="แผนกการตลาด">แผนกการตลาด</option>
+        <option value="แผนกวิชาการบัญชี">แผนกวิชาการบัญชี</option>
+        <option value="แผนกวิชาช่างกลโรงงาน">แผนกวิชาช่างกลโรงงาน</option>
+        <option value="แผนกวิชาช่างกลโรงงาน">แผนกวิชาช่างก่อสร้าง</option>
+        <option value="แผนกวิชาช่างอิเล็กทรอนิกส์">แผนกวิชาช่างอิเล็กทรอนิกส์</option>
+        <option value="แผนกวิชาช่างไฟฟ้ากำลัง">แผนกวิชาช่างไฟฟ้ากำลัง</option>
+        <option value="แผนกวิชายานยนต์">แผนกวิชายานยนต์</option>
+        <option value="แผนกวิชาเทคนิคพื้นฐาน">แผนกวิชาเทคนิคพื้นฐาน</option>
+        <option value="แผนกวิชาสามัญ-สัมพันธ์">แผนกวิชาสามัญ-สัมพันธ์</option>
+    </select>
+
+    <input id="stdDob" class="form-control mb-2" placeholder="คลิกเลือกวันเกิด" readonly>
     <button class="btn btn-success w-100 mb-3" onclick="addStudent()">เพิ่มนักเรียน</button>
 
     <hr>
@@ -473,13 +496,13 @@ h3, h5 {
       </div>
       <div class="modal-body">
         <p>กรุณาเรียงข้อมูลในไฟล์ CSV ตามลำดับ 5 คอลัมน์ดังนี้:</p>
-        <div class="bg-light p-3 border rounded mb-3">
-            <code>ชื่อ-นามสกุล,รหัสนักเรียน,ระดับชั้น,สาขาวิชา,วันเดือนปีเกิด</code>
-        </div>
-        <h6>คำอธิบายฟิลด์:</h6>
-        <ul>
-            <li><strong>วันเดือนปีเกิด:</strong> รูปแบบ <code>วว/ดด/ปปปป</code> (เช่น 15052548)</li>
-        </ul>
+          <div class="bg-light p-3 border rounded mb-3">
+              <code>ชื่อ-นามสกุล,รหัสนักเรียน,ระดับชั้น,สาขาวิชา,วันเดือนปีเกิด</code>
+          </div>
+          <h6>คำอธิบายฟิลด์:</h6>
+          <ul>
+              <li><strong>วันเดือนปีเกิด:</strong> รูปแบบ <code>วว ดด ปปปป</code> (เช่น 10082547)</li>
+          </ul>
         <h6>ตัวอย่างข้อมูล:</h6>
         <pre class="bg-dark text-warning p-2">นายสมชาย ดีมาก,652010001,ปวช.1,ช่างยนต์,15022549
 นางสาวใจดี เรียนเก่ง,652010002,ปวช.1,การบัญชี,20112548</pre>
@@ -535,6 +558,7 @@ function importSubjectsCSV() {
     reader.readAsText(file, 'UTF-8');
 }
 
+
 // ฟังก์ชันดาวน์โหลดรายงานวิชาทั้งหมดเป็น CSV
 function downloadAllSubjectReport() {
     const subjects = JSON.parse(localStorage.getItem("subjects") || "[]");
@@ -551,29 +575,7 @@ function downloadAllSubjectReport() {
 
     downloadCSV(csv, "รายการวิชาทั้งหมด.csv");
 }
-  flatpickr("#eventStart", {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true,
-    allowInput: true
-  });
 
-  // ตั้งค่าตัวเลือกเวลาสิ้นสุด
-  flatpickr("#eventEnd", {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true,
-    allowInput: true
-  });
-flatpickr("#eventDate", {
-    dateFormat: "Y-m-d",        // รูปแบบที่ใช้บันทึกลงฐานข้อมูล (เพื่อให้โค้ดเดิมทำงานได้)
-    altInput: true,             // เปิดใช้งานการแสดงผลรูปแบบอื่น
-    altFormat: "d/m/Y",         // รูปแบบที่จะแสดงในช่อง (วัน/เดือน/ปี)
-    locale: "th",               // ใช้ปฏิทินภาษาไทย
-    allowInput: true            // ยอมให้พิมพ์เองได้ด้วย
-  });
 /* 🆕 Utility Function: ดาวน์โหลด CSV */
 function downloadCSV(csvContent, fileName) {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -682,7 +684,8 @@ function getRegistrations(){
 // 1. ฟังก์ชันเพิ่มกิจกรรมเดิมของคุณ (ที่มีการตรวจการชนเวลา)
 function addEvent() {
   const title = document.getElementById("eventTitle").value.trim();
-  const date  = document.getElementById("eventDate").value; // คาดหวังรูปแบบ YYYY-MM-DD
+  const dateInput = document.getElementById("eventDate");
+  const date = $(dateInput).data('realDate'); // ค่า ค.ศ. จริง
   const start = document.getElementById("eventStart").value; 
   const end   = document.getElementById("eventEnd").value;   
   const mode  = document.getElementById("eventMode").value;
@@ -1188,41 +1191,39 @@ renderSubjects();
 /* =======================
    นักเรียน
 ======================= */
-function addStudent(){
-  // แก้ไข ID ให้ตรงกับ HTML ของคุณ (stdName, stdId, stdGrade, stdDept, stdDob)
+function addStudent() {
   const name = document.getElementById("stdName").value.trim();
-  const id   = document.getElementById("stdId").value.trim();
-  const grade = document.getElementById("stdGrade").value.trim(); 
-  const dept = document.getElementById("stdDept").value.trim();   
-  const dob  = document.getElementById("stdDob").value.trim();
+  const id = document.getElementById("stdId").value.trim();
+  const grade = document.getElementById("stdGrade").value; 
+  const dept = document.getElementById("stdDept").value;   
+  const dobRaw = document.getElementById("stdDob").value.trim();
 
-  // ตรวจสอบข้อมูล
-  if(!name || !id || !grade || !dept || !dob){
-    alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+  // ✅ แก้ไข: ลบ / ออกเพื่อให้บันทึกเป็น 10082547
+  const dob = dobRaw.replace(/\//g, '');
+
+  if(!name || !id || !grade || !dept || !dob) {
+    alert("กรุณากรอกข้อมูลให้ครบทุกช่อง และเลือกแผนก/ระดับชั้น");
     return;
   }
 
   let students = JSON.parse(localStorage.getItem("students") || "[]");
-  
-  // ตรวจสอบรหัสซ้ำ
-  if(students.some(s => s.id === id)){
-    alert("รหัสนักเรียนนี้มีในระบบแล้ว");
+  if(students.some(s => s.id === id)) {
+    alert("รหัสนักเรียนนี้มีอยู่ในระบบแล้ว");
     return;
   }
 
-  // บันทึกลง localStorage
   students.push({ name, id, grade, dept, dob });
   localStorage.setItem("students", JSON.stringify(students));
 
-  // ล้างค่าในช่อง Input หลังจากเพิ่มเสร็จ
+  // ล้างค่าฟอร์ม
   document.getElementById("stdName").value = "";
   document.getElementById("stdId").value = "";
-  document.getElementById("stdGrade").value = "";
-  document.getElementById("stdDept").value = "";
+  document.getElementById("stdGrade").selectedIndex = 0; 
+  document.getElementById("stdDept").selectedIndex = 0;  
   document.getElementById("stdDob").value = "";
 
-  alert("เพิ่มรายชื่อสำเร็จ ✅");
-  renderStudents(); // อัปเดตรายชื่อในหน้าจอ
+  renderStudents();
+  alert("เพิ่มนักเรียนสำเร็จ!");
 }
 
 function renderStudents(){
@@ -1245,7 +1246,7 @@ function renderStudents(){
       <div>
         <strong class="text-primary">${s.name} (${s.id})</strong>
         <br>
-        <small class="text-muted">ชั้น: ${s.grade || '-'}, แผนก: ${s.dept || '-'} - เกิด: ${s.dob || '-'}</small>
+        <small class="text-muted">ชั้น: ${s.grade || '-'}, แผนก: ${s.dept || '-'} - เกิด: ${(s.dob || '').replace(/\//g, '')}</small>
       </div>
       <div class="d-flex gap-2">
           <button class="btn btn-sm btn-outline-primary" onclick="showStudentDetail('${s.id}')">รายละเอียด</button>
@@ -1346,8 +1347,12 @@ function showStudentDetail(studentId){
     // 1. คำนวณกิจกรรมและการขาด
     let attendedCount = 0;
     let missedCount = 0;
-    
+    const now = new Date(); // ดึงเวลาปัจจุบันมาใช้เปรียบเทียบ
+
     Object.keys(events).forEach(date => {
+        // แยกส่วน ปี-เดือน-วัน ของกิจกรรม
+        const [y, m, d] = date.split("-").map(Number);
+        
         events[date].forEach((event, index) => {
             if (event.mode === 'register') {
                 // ✅ แก้ไข: ปรับการเช็คให้รองรับทั้ง Object และ String
@@ -1362,7 +1367,14 @@ function showStudentDetail(studentId){
                 if (isRegistered) {
                     attendedCount++;
                 } else {
-                    missedCount++;
+                    // 🔥 เพิ่มการตรวจสอบวันเวลา: จะนับว่า "ขาด" เฉพาะกิจกรรมที่ผ่านพ้นเวลาไปแล้วเท่านั้น
+                    // ตั้งค่าเวลาจบกิจกรรม (ถ้าไม่มีในข้อมูล ให้ถือว่าเป็นสิ้นวันนั้น 23:59)
+                    const [endHour, endMin] = (event.end || "23:59").split(":").map(Number);
+                    const eventEndTime = new Date(y, m - 1, d, endHour, endMin);
+
+                    if (now > eventEndTime) {
+                        missedCount++;
+                    }
                 }
             }
         });
@@ -1385,7 +1397,6 @@ function showStudentDetail(studentId){
     if (studentRedeems.length === 0) {
         redeemListUl.innerHTML = "<li class='list-group-item text-center text-muted'>ยังไม่มีการแลกวิชา</li>";
     } else {
-        // เรียงจากล่าสุดขึ้นก่อนเพื่อให้แอดมินดูง่าย
         [...studentRedeems].reverse().forEach(log => {
             const li = document.createElement("li");
             li.className = "list-group-item d-flex justify-content-between align-items-center";
@@ -1401,16 +1412,12 @@ function showStudentDetail(studentId){
     }
 
     // อัปเดตข้อมูลลงใน Modal
-    document.getElementById("stuDetailName").innerText = `${student.name} (${student.id})`;
-    // แสดง Grade และ Dept แยกบรรทัดหรือส่วนเสริมเพื่อให้ดูสะอาดตา
-    const infoText = `ชั้น: ${student.grade || '-'} | แผนก: ${student.dept || '-'}`;
-    
-    // ตรวจสอบว่ามี Element สำหรับแสดงชั้น/แผนกไหม ถ้าไม่มีให้ต่อท้ายชื่อ
     const nameEl = document.getElementById("stuDetailName");
+    const infoText = `ชั้น: ${student.grade || '-'} | แผนก: ${student.dept || '-'}`;
     nameEl.innerHTML = `<strong>${student.name}</strong> (${student.id})<br><small class="text-muted">${infoText}</small>`;
 
     document.getElementById("stuAttendedCount").innerText = attendedCount;
-    document.getElementById("stuMissedCount").innerText = missedCount;
+    document.getElementById("stuMissedCount").innerText = missedCount; // ค่านี้จะไม่รวมกิจกรรมในอนาคตแล้ว
     document.getElementById("stuPointCount").innerText = finalPoints.toFixed(1);
     document.getElementById("stuRedeemTotal").innerText = studentRedeems.length;
 
@@ -1422,10 +1429,7 @@ function showStudentDetail(studentId){
 ======================= */
 function importStudentsCSV(){
   const file = document.getElementById("studentCSV").files[0];
-  if(!file){
-    alert("เลือกไฟล์ CSV ก่อน");
-    return;
-  }
+  if(!file) { alert("เลือกไฟล์ CSV ก่อน"); return; }
 
   const reader = new FileReader();
   reader.onload = e => {
@@ -1433,37 +1437,120 @@ function importStudentsCSV(){
     let students = JSON.parse(localStorage.getItem("students") || "[]");
     let added = 0;
 
-    lines.forEach((line,i)=>{
-      if(i===0) return;
+    lines.forEach((line, i) => {
+      if(i === 0 || !line.trim()) return; // ข้าม Header และบรรทัดว่าง
       
-      // NEW: คาดหวัง 5 คอลัมน์: name, id, grade, dept, dob
-      const parts = line.split(",").map(x=>x.trim().replace(/^"|"$/g, '')); // เพิ่มการตัดเครื่องหมายคำพูด (สำหรับ Excel)
-      if (parts.length < 5) return; // ข้ามบรรทัดที่ไม่ครบ 5 คอลัมน์
-
-      const name = parts[0];
-      const id = parts[1];
-      const grade = parts[2]; // NEW
-      const dept = parts[3];  // NEW
-      const dob = parts[4];
+      // แยกคอมม่าและตัดช่องว่าง/เครื่องหมายคำพูดออก
+      const parts = line.split(",").map(x => x.trim().replace(/^"|"$/g, ''));
       
-      // NEW: เพิ่ม grade และ dept ในการตรวจสอบและบันทึก
-      if(name && id && grade && dept && dob && !students.some(s=>s.id===id)){ 
-        students.push({ name, id, grade, dept, dob }); 
-        added++;
+      if (parts.length >= 5) {
+        const [name, id, grade, dept, dob] = parts;
+        if(!students.some(s => s.id === id)) {
+          students.push({ name, id, grade, dept, dob });
+          added++;
+        }
       }
     });
 
     localStorage.setItem("students", JSON.stringify(students));
     renderStudents();
-    alert(`นำเข้านักเรียนสำเร็จ: ${added} คน\n\n**หมายเหตุ**: รูปแบบ CSV ที่คาดหวังคือ: ชื่อ,รหัสนักเรียน,ระดับชั้น,แผนก,วันเกิด`);
+    alert(`นำเข้าสำเร็จ ${added} รายการ`);
   };
-
-  reader.readAsText(file,"UTF-8");
+  reader.readAsText(file, 'UTF-8'); // ใส่ UTF-8 เพื่อรองรับภาษาไทย
 }
 
 renderStudents();
 
 </script>
+
+
+<!-- jQuery UI Datepicker (Thai BE) -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+<script>
+$(function () {
+    // 1. ตั้งค่ามาตรฐานเป็นภาษาไทย
+    $.datepicker.regional['th'] = {
+        closeText: 'ปิด', prevText: 'ก่อนหน้า', nextText: 'ถัดไป',
+        monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
+        dayNamesMin: ['อา','จ','อ','พ','พฤ','ศ','ส'],
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: 'c-60:c+10'
+    };
+    $.datepicker.setDefaults($.datepicker.regional['th']);
+
+    // 2. ส่วนของ "จัดการนักเรียน" (วันเกิด) -> บังคับให้แสดงปี พ.ศ.
+    $(document).on('focus', "#stdDob", function(){
+        $(this).datepicker({
+            isBE: true, // ใช้ปี พ.ศ.
+            beforeShow: function(input, inst) {
+                // บังคับเปลี่ยนเลขปีใน Dropdown ให้เป็น พ.ศ. เฉพาะของนักเรียน
+                setTimeout(function() {
+                    $('.ui-datepicker-year option').each(function() {
+                        var year = parseInt($(this).val());
+                        if (year < 2400) $(this).text(year + 543);
+                    });
+                }, 1);
+            },
+            onChangeMonthYear: function(year, month, inst) {
+                setTimeout(function() {
+                    $('.ui-datepicker-year option').each(function() {
+                        var y = parseInt($(this).val());
+                        if (y < 2400) $(this).text(y + 543);
+                    });
+                }, 1);
+            }
+        });
+    });
+    
+    // 3. ส่วนของ "เพิ่มกิจกรรม" -> ใช้ ค.ศ. ตามมาตรฐาน
+    $(document).on('focus', "#eventDate", function () {
+    $(this).datepicker({
+        dateFormat: 'dd/mm/yy', 
+        isBE: false,             // 👈 เปลี่ยนเป็น false เพื่อให้ช่อง Input เป็น ค.ศ. (2026)
+        changeMonth: true,
+        changeYear: true,
+        onSelect: function (dateText) {
+            const parts = dateText.split('/');
+            // เก็บค่าเข้า database เป็น YYYY-MM-DD (ค.ศ.)
+            const formatted = `${parts[2]}-${parts[1]}-${parts[0]}`; 
+            $(this).data('realDate', formatted);
+        }
+    });
+});
+});
+(function($){
+    if (!$.datepicker) return;
+
+    const _oldGenerate = $.datepicker._generateMonthYearHeader;
+    $.datepicker._generateMonthYearHeader = function(inst, drawMonth, drawYear,
+        minDate, maxDate, secondary, monthNames, monthNamesShort) {
+
+        let html = _oldGenerate.call(this, inst, drawMonth, drawYear,
+            minDate, maxDate, secondary, monthNames, monthNamesShort);
+
+        // --- แก้ไขส่วนนี้ ---
+        // เช็คว่าถ้าเป็น id "eventDate" (หน้ากิจกรรม) ให้ส่งคืนค่าเดิม (ค.ศ.) ทันที ไม่ต้องบวก 543
+        if (inst.id === 'eventDate') {
+            return html;
+        }
+
+        // ถ้าไม่ใช่ (เช่น เป็นของนักเรียน) ให้เปลี่ยนเลขปีเป็น พ.ศ. ตามปกติ
+        return html.replace(/\b(19|20)\d{2}\b/g, function(y){
+            return parseInt(y, 10) + 543;
+        });
+        // ------------------
+    };
+})(jQuery);
+</script>
+
+
+
+
 
 </body>
 </html>
