@@ -1,4 +1,4 @@
-// calendar.js — ปฏิทินหลัก (แสดงเดือน/วัน/เวลา) + ตรวจ login ก่อนลงทะเบียน
+/// calendar.js — ปฏิทินหลัก (แสดงเดือน/วัน/เวลา) + ตรวจ login ก่อนลงทะเบียน
 let currentYear = new Date().getFullYear();
 let selectedMonth = new Date().getMonth();
 let selectedDate = null;
